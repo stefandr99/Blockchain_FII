@@ -66,4 +66,8 @@ contract SponsorFunding {
             revert("There are not enough funds to perform this transaction");
         }
     }
+
+    fallback() external payable {}
+    
+    receive() external payable {}
 }

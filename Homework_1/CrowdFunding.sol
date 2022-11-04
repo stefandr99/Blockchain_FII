@@ -7,13 +7,13 @@ import "./DistributeFunding.sol";
 
 contract CrowdFunding {
     uint public fundingGoal;
-    uint private funding;
-    State public currentState;
+    uint public funding;
+    State private currentState;
     address owner;
     uint index;
     mapping (address => Contributor) contributors;
-    SponsorFunding sponsorFunding;
-    DistributeFunding distributeFunding;
+    SponsorFunding private sponsorFunding;
+    DistributeFunding private distributeFunding;
 
     event BeforeBalanceSent(address, uint, uint);
     event AfterBalanceSent(uint);
@@ -30,7 +30,7 @@ contract CrowdFunding {
         funded
     }
 
-    constructor(uint _fundingGoal, SponsorFunding _sponsorFunding, DistributeFunding _distributeFunding) payable {
+    constructor(uint _fundingGoal, SponsorFunding _sponsorFunding, DistributeFunding _distributeFunding) {
         fundingGoal = _fundingGoal * (10 ** 18);
         sponsorFunding = _sponsorFunding;
         distributeFunding = _distributeFunding;
@@ -95,13 +95,8 @@ contract CrowdFunding {
         currentState = State.funded;
     }
 
-    function transferFundsToDistributeFunding() isOwner goalReached external payable {
-        emit BeforeBalanceSent(address(distributeFunding), funding, getBalance());
-        address add = address(distributeFunding);
-        require(funding <= getBalance(), "Funding grater than balance");
-        payable(add).transfer(funding);
-        emit AfterBalanceSent(funding);
-        distributeFunding.distributeFunds();
+    function transferFundsToDistributeFunding() isOwner goalReached payable public {
+        payable(distributeFunding).transfer(funding);
     }
 
     function getBalance() public view returns (uint) {
