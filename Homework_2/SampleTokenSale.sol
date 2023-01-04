@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
+
 import "./SampleToken.sol";
-import "hardhat/console.sol";
 
 contract SampleTokenSale {
     
@@ -51,6 +51,7 @@ contract SampleTokenSale {
 
         require(msg.value >= payment, "You haven't sent enough");
         require(tokenContract.balanceOf(owner) >= _numberOfTokens, "There are not enough tokens in the balance");
+        require(tokenContract.askForPermissionToSell(msg.sender, _numberOfTokens), "You don't have token owner permission");
         require(tokenContract.transferFrom(owner, msg.sender, _numberOfTokens), "The transfer failed. Try again");
 
         // transfer the amount for the tokens

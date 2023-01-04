@@ -25,7 +25,14 @@ contract SampleToken {
         _;
     }
 
-     function getOwner() public view returns (address) {
+    function askForPermissionToSell(address buyer, uint256 tokens) public pure returns(bool) {
+        // logic to determine whether owner allows the seller to sell the tokens to this buyer or not
+
+        // return true for any case as it is not in the exectise scope to implement the logic
+        return true;
+    }
+
+    function getOwner() public view returns (address) {
         return owner;
     }
 
@@ -94,6 +101,7 @@ contract SampleToken {
         allowed[msg.sender][msg.sender] += newTokens;
 
         emit Approval(msg.sender, msg.sender, newTokens);
+        emit Transfer(msg.sender, msg.sender, newTokens);
     }
 
     fallback() external payable {}
